@@ -36,6 +36,9 @@ typealias ElementTuple = (range: NSRange, element: ActiveElement, type: ActiveTy
     @IBInspectable open var hashtagColor: UIColor = .blue {
         didSet { updateTextStorage(parseText: false) }
     }
+    @IBInspectable open var hashtagBackgroundColor: UIColor = .clear {
+        didSet { updateTextStorage(parseText: false) }
+    }
     @IBInspectable open var hashtagSelectedColor: UIColor? {
         didSet { updateTextStorage(parseText: false) }
     }
@@ -315,12 +318,24 @@ typealias ElementTuple = (range: NSRange, element: ActiveElement, type: ActiveTy
         for (type, elements) in activeElements {
 
             switch type {
-            case .mention: attributes[NSAttributedString.Key.foregroundColor] = mentionColor
-            case .hashtag: attributes[NSAttributedString.Key.foregroundColor] = hashtagColor
-            case .url: attributes[NSAttributedString.Key.foregroundColor] = URLColor
-            case .custom: attributes[NSAttributedString.Key.foregroundColor] = customColor[type] ?? defaultCustomColor
+            case .mention:
+                attributes[NSAttributedString.Key.foregroundColor] = mentionColor
+                attributes[NSAttributedString.Key.backgroundColor] = UIColor.clear
+                attributes[NSAttributedString.Key.underlineStyle] = nil
+            case .hashtag:
+                attributes[NSAttributedString.Key.foregroundColor] = hashtagColor
+                attributes[NSAttributedString.Key.backgroundColor] = hashtagBackgroundColor
+                attributes[NSAttributedString.Key.underlineStyle] = NSUnderlineStyle.single.rawValue
+            case .url:
+                attributes[NSAttributedString.Key.foregroundColor] = URLColor
+                attributes[NSAttributedString.Key.backgroundColor] = UIColor.clear
+                attributes[NSAttributedString.Key.underlineStyle] = nil
+            case .custom:
+                attributes[NSAttributedString.Key.foregroundColor] = customColor[type] ?? defaultCustomColor
+                attributes[NSAttributedString.Key.backgroundColor] = UIColor.clear
+                attributes[NSAttributedString.Key.underlineStyle] = nil
             }
-            
+
             if let highlightFont = hightlightFont {
                 attributes[NSAttributedString.Key.font] = highlightFont
             }
